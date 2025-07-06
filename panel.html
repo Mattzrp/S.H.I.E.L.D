@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SHIELD Review Panel</title>
+</head>
+<body style="background:#111;color:#eee;font-family:sans-serif">
+  <h1>SHIELD Review Panel</h1>
+  <div id="userList"></div>
+
+  <script>
+    async function loadUsers() {
+      const res = await fetch('/api/pending');
+      const users = await res.json();
+      const container = document.getElementById('userList');
+      container.innerHTML = '';
+
+      if (users.length === 0) {
+        container.innerHTML = '<p>No users to review.</p>';
+        return;
+      }
+
+      users.forEach(user => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+          <b>${user.username}</b> from group <i>${user.groupName}</i><br>
+          <input type="text" placeholder="reason" id="reason-${user.userId}">
+          <button onclick="approve('${user.userId}')">✅ Approve</button>
+          <button onclick="deny('${user.userId}')">❌ Deny</button>
+          <hr>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    async function approve(userId) {
+      const reason = document.getElementById(`reason-${userId}`)?.value || '';
+      await fetch('/api/approve/' + userId, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reason })
+      });
+      loadUsers();
+    }
+
+    async function deny(userId) {
+      await fetch('/api/reject/' + userId, { method: 'POST' });
+      loadUsers();
+    }
+
+    window.onload = loadUsers;
+  </script>
+</body>
+</html>
