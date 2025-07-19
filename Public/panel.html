@@ -2,23 +2,30 @@
 <html>
 <head>
   <title>SHIELD Review Panel</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body style="background:#111;color:#eee;font-family:sans-serif">
-  <h1>SHIELD Review Panel</h1>
-  <div id="userList"></div>
+<body>
+  <h1>SHIELD Review Panel</h1> 
+  <div style="text-align:right;">
+  <a href="/logout"><button>🔓 Logout</button></a>
+</div> 
 
+<div style="text-align:right;">
+<a href="/panel/stats"><button>📊Stats</button></a>
+<div>
+
+  <div style="text-align: left;" id="userList"></div>
   <script>
+
     async function loadUsers() {
       const res = await fetch('/api/pending');
       const users = await res.json();
       const container = document.getElementById('userList');
       container.innerHTML = '';
-
       if (users.length === 0) {
         container.innerHTML = '<p>No users to review.</p>';
         return;
       }
-
       users.forEach(user => {
         const div = document.createElement('div');
         div.innerHTML = `

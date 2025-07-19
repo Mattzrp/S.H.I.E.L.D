@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reviewer Stats</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    body {
+      padding: 20px;
+      background: #121212;
+      color: white;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #1e1e1e;
+      border: 1px solid #444;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #333;
+    }
+
+    th {
+      background-color: #222;
+    }
+
+    tr:hover {
+      background-color: #2a2a2a;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #00ffff;
+    }
+
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+        width: 100%;
+      }
+
+      tr {
+        margin-bottom: 15px;
+      }
+
+      td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+      }
+
+      td::before {
+        position: absolute;
+        left: 15px;
+        top: 10px;
+        white-space: nowrap;
+        font-weight: bold;
+        color: #ccc;
+      }
+
+      td:nth-of-type(1)::before { content: "Reviewer"; }
+      td:nth-of-type(2)::before { content: "Approved"; }
+      td:nth-of-type(3)::before { content: "Denied"; }
+    }
+  </style>
+</head>
+<body>
+  <h1>📊 Reviewer Activity</h1>
+  <a href="/panel"><button>Return To panel</button></a>
+  <table id="stats">
+    <thead>
+      <tr>
+        <th>Reviewer</th>
+        <th>Approved</th>
+        <th>Denied</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    fetch('/data/logs.json')
+      .then(res => res.json())
+      .then(data => {
+        const counts = {};
+        for (const entry of data) {
+          const name = entry.by || 'unknown';
+          if (!counts[name]) counts[name] = { approved: 0, denied: 0};
+          if (entry.action === 'approve') counts[name].approved++;
+          else if (entry.action === 'deny') counts[name].denied++;
+        }
+
+        const tbody = document.querySelector('#stats tbody');
+        for (const name in counts) {
+          const stat = counts[name];
+          const row = `<tr>
+            <td>${name}</td>
+            <td>${stat.approved}</td>
+            <td>${stat.denied}</td>
+          </tr>`;
+          tbody.innerHTML += row;
+        }
+      });
+  </script>
+</body>
+</html>

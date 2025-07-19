@@ -2,14 +2,15 @@
 <html>
 <head>
   <title>Submit a Roblox Group</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body style="font-family:sans-serif;background:#111;color:#eee;padding:2rem">
+<body>
   <h1>Submit a Suspicious Roblox Group</h1>
   <form onsubmit="submitGroup(event)">
     <input type="number" id="groupId" placeholder="Group ID" required>
     <button type="submit">Submit</button>
   </form>
-  <div id="status" style="margin-top:1rem;"></div>
+  <div id="status"></div>
 
   <script>
     async function submitGroup(e) {

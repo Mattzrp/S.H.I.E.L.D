@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+   <h1>Admin Panel</h1>
+</div>
+  <form method="POST" action="/admin/add">
+    <input name="username" placeholder="Username" required>
+    <input name="passcode" placeholder="New Passcode" required>
+    <button type="submit">Add Reviewer</button>
+  </form>
+
+
+<a href="/admin/stats"><button>📊 Ban Reason Stats</button></a>   <a href="/admin/keys"><button>🔑Pending Keys</button></a>  <a href="/logout"><button>🔓 Logout</button></a>
+
+  <hr>
+  <h2>Existing Reviewers</h2>
+  <ul id="reviewerList">Loading...</ul>
+
+  <script>
+    fetch('/api/reviewers')
+      .then(res => res.json())
+      .then(data => {
+        const ul = document.getElementById('reviewerList');
+        ul.innerHTML = '';
+        data.forEach(r => {
+          const li = document.createElement('li');
+          li.innerHTML = `<b>${r.username}</b> — <code>${r.passcode}</code>`;
+          ul.appendChild(li);
+        });
+      });
+  </script>
+</body>
+
+</html>
