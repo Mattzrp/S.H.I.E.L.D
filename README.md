@@ -61,7 +61,9 @@ WEBHOOK_URL=https://discord.com/api/webhooks/xxx
 ```
 
 ---
-
+### (Optional) Configure The MaintenanceOn/Off.vbs
+In ˋ/MaintenanceOn.vbsˋ and in ˋMaintenanceOff.vbsˋ:
+add the path of the project
 ### 3. Add Reviewer Accounts
 
 In `/data/reviewers.json`:
@@ -86,7 +88,8 @@ In `/data/reviewers.json`:
 ```bash
 node server.js
 ```
-
+or
+Run Start.vbs to run the server headless in the background
 Visit `http://localhost:3000` and login via `/panel` or `/admin`.
 
 ---
