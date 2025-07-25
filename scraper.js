@@ -32,8 +32,8 @@ async function scrapeGroup(groupId) {
   const groupName = await getGroupName(groupId);
 
   try {
-    do {
-      const url = `https://groups.roblox.com/v1/groups/${groupId}/users?limit=100${cursor ? `&cursor=${cursor}` : ''}`;
+    do { 
+      const url = `https://groups.roblox.com/v1/groups/${groupId}/users?limit=100&cursor=${cursor}` : ''}`;
       const res = await axios.get(url);
       const users = res.data.data;
 
