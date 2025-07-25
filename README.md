@@ -137,5 +137,5 @@ MIT License — free for personal and dev use.
 
 ## 👥 Credits
 
-Built by [YourNameHere] and contributors.  
-Special thanks to all SHIELD reviewers and test devs
+Built by Mat, contributors and helpers like Limefizzdude.  
+Special thanks to all SHIELD reviewers and test devs.
