@@ -62,8 +62,8 @@ WEBHOOK_URL=https://discord.com/api/webhooks/xxx
 
 ---
 ### (Optional) Configure The MaintenanceOn/Off.vbs
-In ˋ/MaintenanceOn.vbsˋ and in ˋMaintenanceOff.vbsˋ:
-add the path of the project
+In `/MaintenanceOn.vbs`and in `/MaintenanceOff.vbs`
+add the path of the project instead of `[Your Path]`
 ### 3. Add Reviewer Accounts
 
 In `/data/reviewers.json`:
