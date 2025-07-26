@@ -38,7 +38,7 @@ scrape.js.      → Scrape script for scraping users
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/S.H.I.E.L.D.git
+git clone https://github.com/Mattzrp/S.H.I.E.L.D.git
 cd S.H.I.E.L.D
 npm install
 ```
