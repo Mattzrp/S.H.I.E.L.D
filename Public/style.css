@@ -6,6 +6,32 @@ body {
   margin: 2rem;
 }
 
+#searchInput {
+  width: 300px;
+  padding: 8px;
+  font-size: 16px;
+}
+
+#autocompleteList {
+  position: absolute;
+  background: rgb(0, 0, 0);
+  border: 1px solid #000;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 99;
+  width: 300px;
+}
+
+.autocomplete-items div {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.autocomplete-items div:hover {
+  background-color: #000;
+}
+
+
 h1 {
   color: #0cf;
   margin-bottom: 1rem;

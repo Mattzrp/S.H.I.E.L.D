@@ -1,60 +1,98 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>SHIELD Review Panel</title>
+<Head>
+  <title>Review Panel</title>
   <link rel="stylesheet" href="style.css">
-</head>
+</Head>
 <body>
   <h1>SHIELD Review Panel</h1> 
   <div style="text-align:right;">
-  <a href="/logout"><button>🔓 Logout</button></a>
-</div> 
+    <a href="/logout"><button>🔓 Logout</button></a>
+  </div> 
 
-<div style="text-align:right;">
-<a href="/panel/stats"><button>📊Stats</button></a>
-<div>
+  <div style="text-align:right;">
+    <a href="/panel/stats"><button>📊 Stats</button></a>
+  </div>
+
+<div style="margin: 10px 0; position: relative;">
+  <input type="text" id="searchInput" placeholder="Search by group name..." autocomplete="off" />
+  <div id="autocompleteList" class="autocomplete-items"></div>
+</div>
 
   <div style="text-align: left;" id="userList"></div>
+
   <script>
+  let allUsers = [];
 
-    async function loadUsers() {
-      const res = await fetch('/api/pending');
-      const users = await res.json();
-      const container = document.getElementById('userList');
-      container.innerHTML = '';
-      if (users.length === 0) {
-        container.innerHTML = '<p>No users to review.</p>';
-        return;
-      }
-      users.forEach(user => {
-        const div = document.createElement('div');
-        div.innerHTML = `
-          <b>${user.username}</b> from group <i>${user.groupName}</i><br>
-          <input type="text" placeholder="reason" id="reason-${user.userId}">
-          <button onclick="approve('${user.userId}')">✅ Approve</button>
-          <button onclick="deny('${user.userId}')">❌ Deny</button>
-          <hr>
-        `;
-        container.appendChild(div);
-      });
-    }
+async function loadUsers() {
+  const res = await fetch('/api/pending');
+  allUsers = await res.json();
+  renderUsers(allUsers);
+}
 
-    async function approve(userId) {
-      const reason = document.getElementById(`reason-${userId}`)?.value || '';
-      await fetch('/api/approve/' + userId, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ reason })
-      });
-      loadUsers();
-    }
+function renderUsers(users) {
+  const container = document.getElementById('userList');
+  container.innerHTML = '';
+  if (users.length === 0) {
+    container.innerHTML = '<p>No users to review.</p>';
+    return;
+  }
+  users.forEach(user => {
+    const div = document.createElement('div');
+    div.innerHTML = `
+      <b>${user.username}</b> from group <i>${user.groupName}</i><br>
+      <input type="text" placeholder="reason" id="reason-${user.userId}">
+      <button onclick="approve('${user.userId}')">✅ Approve</button>
+      <button onclick="deny('${user.userId}')">❌ Deny</button>
+      <hr>
+    `;
+    container.appendChild(div);
+  });
+}
 
-    async function deny(userId) {
-      await fetch('/api/reject/' + userId, { method: 'POST' });
-      loadUsers();
-    }
+function filterUsers() {
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = allUsers.filter(u =>
+    u.groupName && u.groupName.toLowerCase().includes(query)
+  );
+  renderUsers(filtered);
+  updateAutocomplete(query);
+}
 
-    window.onload = loadUsers;
+function updateAutocomplete(query) {
+  const list = document.getElementById('autocompleteList');
+  list.innerHTML = '';
+  if (!query) return;
+
+  const groups = [...new Set(allUsers.map(u => u.groupName).filter(Boolean))];
+  const matches = groups.filter(name => name.toLowerCase().includes(query)).slice(0, 10);
+
+  matches.forEach(name => {
+    const div = document.createElement('div');
+    div.textContent = name;
+    div.onclick = () => {
+      document.getElementById('searchInput').value = name;
+      filterUsers(); // triggers filter + closes dropdown
+      list.innerHTML = '';
+    };
+    list.appendChild(div);
+  });
+}
+
+async function approve(userId) {
+  const reason = document.getElementById(`reason-${userId}`)?.value || '';
+  await fetch('/api/approve/' + userId, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ reason })
+  });
+  loadUsers();
+}
+
+async function deny(userId) {
+  await fetch('/api/reject/' + userId, { method: 'POST' });
+  loadUsers();
+}
+
+document.getElementById('searchInput').addEventListener('input', filterUsers);
+window.onload = loadUsers;
   </script>
 </body>
-</html>
